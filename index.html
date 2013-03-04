@@ -167,8 +167,8 @@
 
 
       xhr = new XMLHttpRequest();
-      xhr.open('GET', 'data/t4t24.json', true);
-      //xhr.open('GET', 'http://lhcathome2.cern.ch/project/data/users/json?12', true);
+      //xhr.open('GET', 'data/t4t24.json', true);
+      xhr.open('GET', 'http://lhcathome2.cern.ch/project/data/users/json?24', true);
       xhr.onreadystatechange = function(e) {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
