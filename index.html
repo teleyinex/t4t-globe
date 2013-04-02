@@ -31,7 +31,7 @@
       }
 
       #currentInfo {
-        width: 270px;
+        width: 350px;
         position: absolute;
         left: 20px;
         top: 63px;
@@ -102,7 +102,7 @@
     </style>
   </head>
   <body>
-  <div id="container"></div>
+  <div id="container" style="margin-left:200px;"></div>
 <a href="https://github.com/teleyinex/t4t-globe"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
 
   <div id="info">
@@ -114,6 +114,7 @@
     <br/>
     <br/>
     <img src="images/t4t.png">
+    <p style="top-padding:10px; font-size:20px;";><strong><span id="n_volunteers"></span></strong> volunteers in the last 24 hours</p>
     <p style="top-padding:10px;">This WebGL demo is built using the Google Chrome Globe WebGL experiment from Google Data Arts Team (you can zoom in using the wheel of your mouse!). The globe shows the volunteers in the last 24 hours contributing to the <a href="http://cern.ch/lhcathome">LHC@Home CERN Test4Theory project</a>.</p>
   </div>
 
@@ -175,6 +176,7 @@
             var data = JSON.parse(xhr.responseText);
             window.data = data;
             var d = [];
+            document.getElementById("n_volunteers").innerHTML = data.nodes.length;
             for (i=0;i<data.nodes.length;i++) {
                 var node = data.nodes[i];
                 if ((node.lat.toFixed(2) != 0) && (node.lon.toFixed(2) != 0))
