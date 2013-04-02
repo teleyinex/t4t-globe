@@ -353,6 +353,19 @@ DAT.Globe = function(container, colorFn) {
     }
   }
 
+  function spinning() {
+
+    var zoomDamp = distance/1000;
+    var x = 8;
+    var y = 0;
+    target.x = target.x + x * 0.005 * zoomDamp;
+    target.y = target.y + y * 0.005 * zoomDamp;
+
+    target.y = target.y > PI_HALF ? PI_HALF : target.y;
+    target.y = target.y < - PI_HALF ? - PI_HALF : target.y;
+  }
+
+
   function onWindowResize( event ) {
     console.log('resize');
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -426,7 +439,9 @@ DAT.Globe = function(container, colorFn) {
   this.renderer = renderer;
   this.scene = scene;
 
+  var spinning_id = window.setInterval(spinning, 150);
   return this;
 
 };
+
 
