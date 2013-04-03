@@ -25,7 +25,7 @@ DAT.Globe = function(container, colorFn) {
   var Shaders = {
     'earth' : {
       uniforms: {
-        'texture': { type: 't', value: 0, texture: null }
+        'texture': { type: 't', value: null }
       },
       vertexShader: [
         'varying vec3 vNormal;',
@@ -72,7 +72,7 @@ DAT.Globe = function(container, colorFn) {
 
   var overRenderer;
 
-  var imgDir = 'globe/';
+  var imgDir = './globe/';
 
   var curZoomSpeed = 0;
   var zoomSpeed = 50;
@@ -95,8 +95,7 @@ DAT.Globe = function(container, colorFn) {
     w = container.offsetWidth || window.innerWidth;
     h = container.offsetHeight || window.innerHeight;
 
-    camera = new THREE.Camera(
-        30, w / h, 1, 10000);
+    camera = new THREE.PerspectiveCamera( 30, w / h, 1, 10000);
     camera.position.z = distance;
 
     vector = new THREE.Vector3();
@@ -104,15 +103,15 @@ DAT.Globe = function(container, colorFn) {
     scene = new THREE.Scene();
     sceneAtmosphere = new THREE.Scene();
 
-    var geometry = new THREE.Sphere(200, 40, 30);
+    var geometry = new THREE.SphereGeometry(200, 40, 30);
 
     shader = Shaders['earth'];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
-    uniforms['texture'].texture = THREE.ImageUtils.loadTexture(imgDir+'world' +
+    uniforms['texture'].value = THREE.ImageUtils.loadTexture(imgDir+'world' +
         '.jpg');
 
-    material = new THREE.MeshShaderMaterial({
+    material = new THREE.ShaderMaterial({
 
           uniforms: uniforms,
           vertexShader: shader.vertexShader,
@@ -121,36 +120,29 @@ DAT.Globe = function(container, colorFn) {
         });
 
     mesh = new THREE.Mesh(geometry, material);
-    mesh.matrixAutoUpdate = false;
-    scene.addObject(mesh);
+    mesh.rotation.y = Math.PI;
+    scene.add(mesh);
 
     shader = Shaders['atmosphere'];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
-    material = new THREE.MeshShaderMaterial({
+    material = new THREE.ShaderMaterial({
 
           uniforms: uniforms,
           vertexShader: shader.vertexShader,
-          fragmentShader: shader.fragmentShader
+          fragmentShader: shader.fragmentShader,
+          side: THREE.BackSide
 
         });
 
     mesh = new THREE.Mesh(geometry, material);
     mesh.scale.x = mesh.scale.y = mesh.scale.z = 1.1;
-    mesh.flipSided = true;
-    mesh.matrixAutoUpdate = false;
-    mesh.updateMatrix();
-    sceneAtmosphere.addObject(mesh);
+    sceneAtmosphere.add(mesh);
 
-    geometry = new THREE.Cube(0.75, 0.75, 1, 1, 1, 1, null, false, { px: true,
+    geometry = new THREE.CubeGeometry(0.75, 0.75, 1, 1, 1, 1, undefined, { px: true,
           nx: true, py: true, ny: true, pz: false, nz: true});
 
-    for (var i = 0; i < geometry.vertices.length; i++) {
-
-      var vertex = geometry.vertices[i];
-      vertex.position.z += 0.5;
-
-    }
+    geometry.applyMatrix( new THREE.Matrix4().makeTranslation(0,0,0.5) );
 
     point = new THREE.Mesh(geometry);
 
@@ -164,9 +156,7 @@ DAT.Globe = function(container, colorFn) {
     container.appendChild(renderer.domElement);
 
     container.addEventListener('mousedown', onMouseDown, false);
-
     container.addEventListener('mousewheel', onMouseWheel, false);
-    container.addEventListener('DOMMouseScroll', onMouseWheel, false);
 
     document.addEventListener('keydown', onDocumentKeyDown, false);
 
@@ -258,7 +248,7 @@ DAT.Globe = function(container, colorFn) {
               morphTargets: true
             }));
       }
-      scene.addObject(this.points);
+      scene.add(this.points);
     }
   }
 
@@ -275,14 +265,11 @@ DAT.Globe = function(container, colorFn) {
     point.scale.z = -size;
     point.updateMatrix();
 
-    var i;
-    for (i = 0; i < point.geometry.faces.length; i++) {
-
+    for (var i = 0; i < point.geometry.faces.length; i++) {
       point.geometry.faces[i].color = color;
-
     }
 
-    GeometryUtils.merge(subgeo, point);
+    THREE.GeometryUtils.merge(subgeo, point);
   }
 
   function onMouseDown(event) {
@@ -327,15 +314,10 @@ DAT.Globe = function(container, colorFn) {
     container.removeEventListener('mouseout', onMouseOut, false);
   }
 
-  // Patch by http://code.google.com/p/webgl-globe/issues/detail?can=2&start=0&num=100&q=&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary&groupby=&sort=&id=20
   function onMouseWheel(event) {
     event.preventDefault();
     if (overRenderer) {
-        if (event.wheelDeltaY) {
-           zoom(event.wheelDeltaY * 0.3);
-           } else {
-           zoom(event.detail * -36);
-           }
+      zoom(event.wheelDeltaY * 0.3);
     }
     return false;
   }
@@ -356,7 +338,7 @@ DAT.Globe = function(container, colorFn) {
   function spinning() {
 
     var zoomDamp = distance/1000;
-    var x = 8;
+    var x = 0.3;
     var y = 0;
     target.x = target.x + x * 0.005 * zoomDamp;
     target.y = target.y + y * 0.005 * zoomDamp;
@@ -367,7 +349,6 @@ DAT.Globe = function(container, colorFn) {
 
 
   function onWindowResize( event ) {
-    console.log('resize');
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -394,6 +375,7 @@ DAT.Globe = function(container, colorFn) {
     camera.position.x = distance * Math.sin(rotation.x) * Math.cos(rotation.y);
     camera.position.y = distance * Math.sin(rotation.y);
     camera.position.z = distance * Math.cos(rotation.x) * Math.cos(rotation.y);
+    camera.lookAt(scene.position);
 
     vector.copy(camera.position);
 
@@ -439,9 +421,8 @@ DAT.Globe = function(container, colorFn) {
   this.renderer = renderer;
   this.scene = scene;
 
-  var spinning_id = window.setInterval(spinning, 150);
+  var spinning_id = window.setInterval(spinning, 100);
   return this;
 
 };
-
 
