@@ -340,7 +340,7 @@ DAT.Globe = function(container, colorFn) {
     var zoomDamp = distance/1000;
     var x = 0.3;
     var y = 0;
-    target.x = target.x + x * 0.005 * zoomDamp;
+    target.x = target.x - x * 0.005 * zoomDamp;
     target.y = target.y + y * 0.005 * zoomDamp;
 
     target.y = target.y > PI_HALF ? PI_HALF : target.y;
