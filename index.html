@@ -3,6 +3,8 @@
   <head>
     <title>WebGL Globe</title>
     <meta charset="utf-8">
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="stylesheets/font-awesome.min.css" rel="stylesheet" media="screen">
     <style type="text/css">
       html {
         height: 100%;
@@ -58,7 +60,7 @@
       #title {
         position: absolute;
         top: 20px;
-        width: 270px;
+        width: 350px;
         left: 20px;
         background-color: rgba(0,0,0,0.2);
         border-radius: 3px;
@@ -67,21 +69,13 @@
       }
 
       .year {
-        font: 16px Georgia;
-        line-height: 26px;
-        height: 30px;
+        font-size: 16px;
         text-align: center;
         float: left;
-        width: 90px;
-        color: rgba(255, 255, 255, 0.4);
+        color: rgba(255, 255, 255, 1);
 
         cursor: pointer;
         -webkit-transition: all 0.1s ease-out;
-      }
-
-      .year:hover, .year.active {
-        font-size: 23px;
-        color: #fff;
       }
 
       #ce span {
@@ -97,8 +91,6 @@
         left: 20px;
         background: url(globe/ce.png);
       }
-
-
     </style>
   </head>
   <body>
@@ -106,20 +98,20 @@
 <a href="https://github.com/teleyinex/t4t-globe"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
 
   <div id="info">
-    <strong><a href="http://www.chromeexperiments.com/globe">WebGL Globe</a></strong> <span class="bull">&bull;</span> Created by the Google Data Arts Team <span class="bull">&bull;</span> Data acquired from <a href="http://lhcathome2.cern.ch">CERN LHC@HOME: Test4Theory</a>
+    <strong><a href="http://www.chromeexperiments.com/globe">WebGL Globe</a></strong> <span class="bull">&bull;</span> Created by the Google Data Arts Team and Adapted by the Citizen Cyberscience Centre<span class="bull">&bull;</span> Data acquired from <a href="http://lhcathome2.cern.ch">CERN LHC@HOME: Test4Theory</a>
   </div>
 
   <div id="currentInfo">
-    <span id="answers" class="year">Volunteers</span>
+    <span id="answers" class="year"><i class="icon-group"></i> <strong><span id="n_volunteers"></span></strong> Volunteers in the last 24 hours</span>
     <br/>
     <br/>
     <img src="images/t4t.png">
-    <p style="top-padding:10px; font-size:20px;";><strong><span id="n_volunteers"></span></strong> volunteers in the last 24 hours</p>
-    <p style="top-padding:10px;">This WebGL demo is built using the Google Chrome Globe WebGL experiment from Google Data Arts Team (you can zoom in using the wheel of your mouse!). The globe shows the volunteers in the last 24 hours contributing to the <a href="http://cern.ch/lhcathome">LHC@Home CERN Test4Theory project</a>.</p>
+    <p style="top-padding:10px;">This WebGL demo is built using the Google Chrome Globe WebGL experiment from Google Data Arts Team (you can zoom in using the wheel of your mouse!). The globe shows the volunteers in the last 24 hours contributing to the <a href="http://cern.ch/lhcathome"><i class="icon-link"></i> LHC@Home CERN Test4Theory project</a>.    </p>
+    <p>Play/Pause the rotation <button id="control" class="btn btn-danger"><i id="control-icon" class="icon-pause"></i></button></p>
   </div>
 
   <div id="title">
-   LHC@Home: Test4Theory
+   <i class="icon-globe"></i> LHC@Home: Test4Theory
   </div>
 
   <a id="ce" href="http://www.chromeexperiments.com/globe">
@@ -171,10 +163,9 @@
         var data = JSON.parse(e.target.responseText);
         window.data = data.nodes;
         var d = [];
-		document.getElementById("n_volunteers").innerHTML = data.nodes.length;
+        document.getElementById("n_volunteers").innerHTML = data.nodes.length;
         for (var i=0;i<data.nodes.length;i++) {
                 var node = data.nodes[i];
-                console.log(node);
                 if ((node.lat.toFixed(2) != 0) && (node.lon.toFixed(2) != 0))
                     {
                         d.push(node.lat.toFixed(2), node.lon.toFixed(2), 0.2);
@@ -198,7 +189,20 @@
       }
 
       animate();
+    }
 
+    var btn = document.getElementById('control');    
+    btn.onclick = function(){
+        //console.log(spinning_id);
+        var icon = document.getElementById('control-icon');
+        if (icon.className.match(/(?:^|\s)icon-pause(?!\S)/)) {
+            icon.className = 'icon-play';
+            window.clearInterval(globe.spinning_id);
+        }
+        else {
+            icon.className = 'icon-pause';
+            globe.spinning_id = window.setInterval(globe.spinning, 100);
+        }
     }
 
   </script>

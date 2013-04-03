@@ -420,8 +420,9 @@ DAT.Globe = function(container, colorFn) {
   this.createPoints = createPoints;
   this.renderer = renderer;
   this.scene = scene;
+  this.spinning = spinning;
 
-  var spinning_id = window.setInterval(spinning, 100);
+  this.spinning_id = window.setInterval(spinning, 100);
   return this;
 
 };
