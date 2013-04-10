@@ -1,212 +1,45 @@
 <!DOCTYPE HTML>
 <html lang="en">
-  <head>
-    <title>WebGL Globe</title>
-    <meta charset="utf-8">
-    <link href="stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="stylesheets/font-awesome.min.css" rel="stylesheet" media="screen">
-    <style type="text/css">
-      html {
-        height: 100%;
-      }
-      body {
-        margin: 0;
-        padding: 0;
-        background: #000000 url(globe/loading.gif) center center no-repeat;
-        color: #ffffff;
-        font-family: sans-serif;
-        font-size: 13px;
-        line-height: 20px;
-        height: 100%;
-      }
+    <head>
+        <title>WebGL Globe</title>
+        <meta charset="utf-8">
+        <meta name="description" content="3D WebGL Globe for LHC@Home: Test4Theory CERN project">
+        <meta name="AUTHOR" content="Citizen Cyberscience Centre">
+        <meta name="AUTHOR" content="Daniel Lombraña González">
+        <link href="stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="stylesheets/font-awesome.min.css" rel="stylesheet" media="screen">
+        <link href="stylesheets/default.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+        <div itemscope itemtype="http://schema.org/WebApplication">
+            <div id="container" style="margin-left:200px;"></div>
+            <a href="https://github.com/teleyinex/t4t-globe"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
 
-      #info {
+            <div itemprop="about" id="info"></div>
 
-        font-size: 11px;
-        position: absolute;
-        bottom: 5px;
-        background-color: rgba(0,0,0,0.8);
-        border-radius: 3px;
-        right: 10px;
-        padding: 10px;
+            <div id="currentInfo">
+                <span id="answers" class="year"><i class="icon-laptop" style="font-size: 20px"></i> <strong><span id="n_volunteers"></span></strong> <span id='board'></span></span>
+                <br/>
+                <br/>
+                <img itemprop="image" src="images/t4t.png">
+                <p itemprop="description" id='description' style="top-padding:10px;"></p>
+                <p id='play'></p>
+            </div>
 
-      }
+            <div id="title">
+                <i class="icon-globe"></i> LHC@Home: Test4Theory
+            </div>
 
-      #currentInfo {
-        width: 350px;
-        position: absolute;
-        left: 20px;
-        top: 63px;
-
-        background-color: rgba(0,0,0,0.2);
-
-        border-top: 1px solid rgba(255,255,255,0.4);
-        padding: 10px;
-      }
-
-      a {
-        color: #aaa;
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-
-      .bull {
-        padding: 0 5px;
-        color: #555;
-      }
-
-      #title {
-        position: absolute;
-        top: 20px;
-        width: 350px;
-        left: 20px;
-        background-color: rgba(0,0,0,0.2);
-        border-radius: 3px;
-        font: 20px Georgia;
-        padding: 10px;
-      }
-
-      .year {
-        font-size: 16px;
-        text-align: center;
-        float: left;
-        color: rgba(255, 255, 255, 1);
-
-        cursor: pointer;
-        -webkit-transition: all 0.1s ease-out;
-      }
-
-      #ce span {
-        display: none;
-      }
-
-      #ce {
-        width: 107px;
-        height: 55px;
-        display: block;
-        position: absolute;
-        bottom: 15px;
-        left: 20px;
-        background: url(globe/ce.png);
-      }
-    </style>
-  </head>
-  <body>
-  <div id="container" style="margin-left:200px;"></div>
-<a href="https://github.com/teleyinex/t4t-globe"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
-
-  <div id="info">
-    <strong><a href="http://www.chromeexperiments.com/globe">WebGL Globe</a></strong> <span class="bull">&bull;</span> Created by the Google Data Arts Team and Adapted by the Citizen Cyberscience Centre<span class="bull">&bull;</span> Data acquired from <a href="http://lhcathome2.cern.ch">CERN LHC@HOME: Test4Theory</a>
-  </div>
-
-  <div id="currentInfo">
-    <span id="answers" class="year"><i class="icon-group"></i> <strong><span id="n_volunteers"></span></strong> Volunteers in the last 24 hours</span>
-    <br/>
-    <br/>
-    <img src="images/t4t.png">
-    <p style="top-padding:10px;">This WebGL demo is built using the Google Chrome Globe WebGL experiment from Google Data Arts Team (you can zoom in using the wheel of your mouse!). The globe shows the volunteers in the last 24 hours contributing to the <a href="http://cern.ch/lhcathome"><i class="icon-link"></i> LHC@Home CERN Test4Theory project</a>.    </p>
-    <p>Play/Pause the rotation <button id="control" class="btn btn-danger"><i id="control-icon" class="icon-pause"></i></button></p>
-  </div>
-
-  <div id="title">
-   <i class="icon-globe"></i> LHC@Home: Test4Theory
-  </div>
-
-  <a id="ce" href="http://www.chromeexperiments.com/globe">
-    <span>This is a Chrome Experiment</span>
-  </a>
-
-  <script src="globe/third-party/system.min.js"></script>
-  <script src="globe/third-party/three.min.js"></script>
-  <script src="globe/third-party/tween.min.js"></script>
-  <script src="globe/globe.js"></script>
-  <script>
-
-    if(System.support.webgl === false){
-
-      var message = document.createElement( 'div' );
-      message.style.cssText = 'font-family:monospace;font-size:13px;text-align:center;color:#fff;background:#333;padding:1em;width:540px;margin:30em auto 0';
-      message.innerHTML = 'Either your graphics card or your browser does not support WebGL.<br /><a href="http://www.khronos.org/webgl/wiki_1_15/index.php/Getting_a_WebGL_Implementation">View a list</a> of WebGL compatible browsers.';
-      document.body.appendChild( message );
-      document.body.style.background = '#000000';
-
-    } else {
-
-      var years = ['Volunteers'];
-      var container = document.getElementById('container');
-      var globe = new DAT.Globe(container);
-
-      var settime = function(globe, t) {
-        return function() {
-          new TWEEN.Tween(globe).to({time: t/years.length},500).easing(TWEEN.Easing.Cubic.Out).start();
-          var y = document.getElementById('answers');
-          if (y.getAttribute('class') === 'year active') {
-            return;
-          }
-          var yy = document.getElementsByClassName('year');
-          for(var i=0; i<yy.length; i++) {
-            yy[i].setAttribute('class','year');
-          }
-          y.setAttribute('class', 'year active');
-        };
-      };
-
-      for(var i = 0; i<years.length; i++) {
-        var y = document.getElementById('answers');
-        y.addEventListener('mouseover', settime(globe,i), false);
-      }
-
-      var xhr = new XMLHttpRequest();
-      xhr.addEventListener('load', function(e) {
-        var data = JSON.parse(e.target.responseText);
-        window.data = data.nodes;
-        var d = [];
-        document.getElementById("n_volunteers").innerHTML = data.nodes.length;
-        for (var i=0;i<data.nodes.length;i++) {
-                var node = data.nodes[i];
-                if ((node.lat.toFixed(2) != 0) && (node.lon.toFixed(2) != 0))
-                    {
-                        d.push(node.lat.toFixed(2), node.lon.toFixed(2), 0.2);
-                    }
-        }
-        d = [['Test4Theory', d]];
-        data = d;
-        for (var i=0;i<data.length;i++) {
-          globe.addData(data[i][1], {format: 'magnitude', name: data[i][0], animated: true});
-        }
-        globe.createPoints();
-        settime(globe,0)();
-        globe.animate();
-      }, false);
-      xhr.open('GET', 'http://lhcathome2.cern.ch/project/data/users/json?24', true);
-      xhr.send(null);
-
-      var animate = function(){
-        requestAnimationFrame(animate);
-        TWEEN.update();
-      }
-
-      animate();
-    }
-
-    var btn = document.getElementById('control');    
-    btn.onclick = function(){
-        //console.log(spinning_id);
-        var icon = document.getElementById('control-icon');
-        if (icon.className.match(/(?:^|\s)icon-pause(?!\S)/)) {
-            icon.className = 'icon-play';
-            window.clearInterval(globe.spinning_id);
-        }
-        else {
-            icon.className = 'icon-pause';
-            globe.spinning_id = window.setInterval(globe.spinning, 100);
-        }
-    }
-
-  </script>
-
-  </body>
-
+            <a id="ce" href="http://www.chromeexperiments.com/globe">
+                <span>This is a Chrome Experiment</span>
+            </a>
+        </div>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="javascripts/translations.js"></script>
+        <script src="globe/third-party/system.min.js"></script>
+        <script src="globe/third-party/three.min.js"></script>
+        <script src="globe/third-party/tween.min.js"></script>
+        <script src="globe/globe.js"></script>
+        <script src="javascripts/main.js"></script>
+    </body>
 </html>
