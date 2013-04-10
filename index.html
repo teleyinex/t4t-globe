@@ -1,41 +1,45 @@
 <!DOCTYPE HTML>
 <html lang="en">
-  <head>
-    <title>WebGL Globe</title>
-    <meta charset="utf-8">
-    <link href="stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="stylesheets/font-awesome.min.css" rel="stylesheet" media="screen">
-    <link href="stylesheets/default.css" rel="stylesheet" media="screen">
-  </head>
-  <body>
-  <div id="container" style="margin-left:200px;"></div>
-<a href="https://github.com/teleyinex/t4t-globe"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
+    <head>
+        <title>WebGL Globe</title>
+        <meta charset="utf-8">
+        <meta name="description" content="3D WebGL Globe for LHC@Home: Test4Theory CERN project">
+        <meta name="AUTHOR" content="Citizen Cyberscience Centre">
+        <meta name="AUTHOR" content="Daniel Lombraña González">
+        <link href="stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="stylesheets/font-awesome.min.css" rel="stylesheet" media="screen">
+        <link href="stylesheets/default.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+        <div itemscope itemtype="http://schema.org/WebApplication">
+            <div id="container" style="margin-left:200px;"></div>
+            <a href="https://github.com/teleyinex/t4t-globe"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
 
-  <div id="info">
-    <strong><a href="http://www.chromeexperiments.com/globe">WebGL Globe</a></strong> <span class="bull">&bull;</span> Created by the Google Data Arts Team and Adapted by the Citizen Cyberscience Centre<span class="bull">&bull;</span> Data acquired from <a href="http://lhcathome2.cern.ch">CERN LHC@HOME: Test4Theory</a>
-  </div>
+            <div itemprop="about" id="info"></div>
 
-  <div id="currentInfo">
-      <span id="answers" class="year"><i class="icon-group"></i> <strong><span id="n_volunteers"></span></strong> Volunteers in the last 24 hours</span>
-    <br/>
-    <br/>
-    <img src="images/t4t.png">
-    <p style="top-padding:10px;">This WebGL demo is built using the Google Chrome Globe WebGL experiment from Google Data Arts Team (you can zoom in using the wheel of your mouse!). The globe shows the volunteers in the last 24 hours contributing to the <a href="http://cern.ch/lhcathome"><i class="icon-link"></i> LHC@Home CERN Test4Theory project</a>.    </p>
-    <p>Play/Pause the rotation <button id="control" class="btn btn-danger"><i id="control-icon" class="icon-pause"></i></button></p>
-  </div>
+            <div id="currentInfo">
+                <span id="answers" class="year"><i class="icon-laptop" style="font-size: 20px"></i> <strong><span id="n_volunteers"></span></strong> <span id='board'></span></span>
+                <br/>
+                <br/>
+                <img itemprop="image" src="images/t4t.png">
+                <p itemprop="description" id='description' style="top-padding:10px;"></p>
+                <p id='play'></p>
+            </div>
 
-  <div id="title">
-   <i class="icon-globe"></i> LHC@Home: Test4Theory
-  </div>
+            <div id="title">
+                <i class="icon-globe"></i> LHC@Home: Test4Theory
+            </div>
 
-  <a id="ce" href="http://www.chromeexperiments.com/globe">
-    <span>This is a Chrome Experiment</span>
-  </a>
-
-  <script src="globe/third-party/system.min.js"></script>
-  <script src="globe/third-party/three.min.js"></script>
-  <script src="globe/third-party/tween.min.js"></script>
-  <script src="globe/globe.js"></script>
-  <script src="javascripts/main.js"></script>
-  </body>
+            <a id="ce" href="http://www.chromeexperiments.com/globe">
+                <span>This is a Chrome Experiment</span>
+            </a>
+        </div>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="javascripts/translations.js"></script>
+        <script src="globe/third-party/system.min.js"></script>
+        <script src="globe/third-party/three.min.js"></script>
+        <script src="globe/third-party/tween.min.js"></script>
+        <script src="globe/globe.js"></script>
+        <script src="javascripts/main.js"></script>
+    </body>
 </html>

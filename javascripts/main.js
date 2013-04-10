@@ -1,4 +1,6 @@
 (function(){
+    var comma_r = d3.format(",");
+
     if(System.support.webgl === false){
 
         var message = document.createElement( 'div' );
@@ -17,7 +19,7 @@
             window.data = data.nodes;
 
             var d = [];
-            document.getElementById("n_volunteers").innerHTML = data.nodes.length;
+            document.getElementById("n_volunteers").innerHTML = comma_r(data.nodes.length);
             for (var i=0;i<data.nodes.length;i++) {
                 var node = data.nodes[i];
                 if ((node.lat.toFixed(2) != 0) && (node.lon.toFixed(2) != 0))
