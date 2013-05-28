@@ -8,6 +8,8 @@ The web page shows a Play/Pause control that allows you to stop/start the
 automatic rotation of the 3D world, so you can pause it if you want to rotate
 it yourself with the mouse.
 
+You can see it in action [here](http://daniellombrana.es/t4t-globe).
+
 By default the 3D globe will rotate slowly, so you can use it to show it in
 as a screen saver in a screen.
 
